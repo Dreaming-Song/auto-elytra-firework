@@ -1,6 +1,6 @@
 {
   "key.autoelytra.boost": "Elytra Boost (Use Firework)",
-  "text.autoelytra.title": "Auto Elytra Firework Boost",
+  "text.autoelytra.title": "Auto Elytra Firework",
   "text.autoelytra.general": "General",
   "text.autoelytra.enabled": "Enabled",
   "text.autoelytra.enabled.tooltip": "Boost with a firework when flying with an elytra and the boost key is pressed.",

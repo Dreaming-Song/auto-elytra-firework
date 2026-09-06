@@ -1,4 +1,4 @@
-# Auto Elytra Firework Boost(鞘翅烟花自动加速)
+# Auto Elytra Firework(鞘翅烟花自动加速)
 
 一个面向 **Minecraft 26.2 + Fabric** 的纯客户端模组:鞘翅滑翔时按 **空格**(默认键,可在 选项 -> 控制 -> 移动 中修改)自动从玩家背包里取用烟花火箭加速;使用结束后**原手持物品会立刻被放回原位**,不需要把烟花放到手上。
 
@@ -45,10 +45,10 @@
 
 ## 安装
 
-直接把构建出的 `build/libs/auto-elytra-boost-1.0.1.jar` 放入客户端 `mods/` 文件夹。若使用工作区里的 `upgrade_26_2/client_mods_26_2/`,可复制到该目录:
+直接把构建出的 `build/libs/auto-elytra-firework-1.0.1.jar` 放入客户端 `mods/` 文件夹。若使用工作区里的 `upgrade_26_2/client_mods_26_2/`,可复制到该目录:
 
 ```bash
-cp build/libs/auto-elytra-boost-1.0.1.jar ../../upgrade_26_2/client_mods_26_2/
+cp build/libs/auto-elytra-firework-1.0.1.jar ../../upgrade_26_2/client_mods_26_2/
 ```
 
 需要同时装有:
@@ -69,8 +69,8 @@ cp build/libs/auto-elytra-boost-1.0.1.jar ../../upgrade_26_2/client_mods_26_2/
 
 产物:
 
-- `build/libs/auto-elytra-boost-1.0.1.jar` —— 模组本体(含模组图标)
-- `build/libs/auto-elytra-boost-1.0.1-sources.jar` —— 源码包
+- `build/libs/auto-elytra-firework-1.0.1.jar` —— 模组本体(含模组图标)
+- `build/libs/auto-elytra-firework-1.0.1-sources.jar` —— 源码包
 
 配置文件保存在游戏目录 `config/autoelytra.json`,可直接手改,也可以在模组菜单里修改。
 

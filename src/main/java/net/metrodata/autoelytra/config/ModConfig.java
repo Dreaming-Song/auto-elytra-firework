@@ -38,7 +38,7 @@ public final class ModConfig {
                 INSTANCE = loaded;
             }
         } catch (IOException | RuntimeException e) {
-            AutoElytraBoost.LOGGER.error("[Auto Elytra Boost] Failed to read config, using defaults.", e);
+            AutoElytraBoost.LOGGER.error("[Auto Elytra Firework] Failed to read config, using defaults.", e);
             INSTANCE = new ConfigData();
         }
     }
@@ -53,7 +53,7 @@ public final class ModConfig {
                 GSON.toJson(INSTANCE, writer);
             }
         } catch (IOException e) {
-            AutoElytraBoost.LOGGER.error("[Auto Elytra Boost] Failed to write config.", e);
+            AutoElytraBoost.LOGGER.error("[Auto Elytra Firework] Failed to write config.", e);
         }
     }
 }

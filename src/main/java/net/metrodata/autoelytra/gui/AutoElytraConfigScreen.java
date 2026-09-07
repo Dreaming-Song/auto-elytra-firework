@@ -48,6 +48,50 @@ public final class AutoElytraConfigScreen {
                 .setSaveConsumer(v -> config.minTicksBetweenUses = v)
                 .build());
 
+        ConfigCategory warnings = builder.getOrCreateCategory(text("text.autoelytra.warnings"));
+
+        warnings.addEntry(entry.startBooleanToggle(text("text.autoelytra.warnFirework"), config.warnLowFireworks)
+                .setDefaultValue(true)
+                .setTooltip(text("text.autoelytra.warnFirework.tooltip"))
+                .setSaveConsumer(v -> config.warnLowFireworks = v)
+                .build());
+
+        warnings.addEntry(entry.startIntSlider(
+                        text("text.autoelytra.fireworkThreshold"),
+                        config.fireworkWarnThreshold, 0, 64)
+                .setDefaultValue(4)
+                .setTooltip(text("text.autoelytra.fireworkThreshold.tooltip"))
+                .setSaveConsumer(v -> config.fireworkWarnThreshold = v)
+                .build());
+
+        warnings.addEntry(entry.startBooleanToggle(text("text.autoelytra.warnElytra"), config.warnLowElytraDurability)
+                .setDefaultValue(true)
+                .setTooltip(text("text.autoelytra.warnElytra.tooltip"))
+                .setSaveConsumer(v -> config.warnLowElytraDurability = v)
+                .build());
+
+        warnings.addEntry(entry.startIntSlider(
+                        text("text.autoelytra.elytraThreshold"),
+                        config.elytraWarnThresholdPercent, 1, 100)
+                .setDefaultValue(20)
+                .setTextGetter(value -> text("text.autoelytra.percent", value))
+                .setTooltip(text("text.autoelytra.elytraThreshold.tooltip"))
+                .setSaveConsumer(v -> config.elytraWarnThresholdPercent = v)
+                .build());
+
+        warnings.addEntry(entry.startIntSlider(text("text.autoelytra.warnInterval"), config.warnCooldownTicks, 20, 600)
+                .setDefaultValue(100)
+                .setTextGetter(value -> text("text.autoelytra.ticks", value))
+                .setTooltip(text("text.autoelytra.warnInterval.tooltip"))
+                .setSaveConsumer(v -> config.warnCooldownTicks = v)
+                .build());
+
+        warnings.addEntry(entry.startBooleanToggle(text("text.autoelytra.warnSound"), config.warnSoundEnabled)
+                .setDefaultValue(true)
+                .setTooltip(text("text.autoelytra.warnSound.tooltip"))
+                .setSaveConsumer(v -> config.warnSoundEnabled = v)
+                .build());
+
         ConfigCategory selection = builder.getOrCreateCategory(text("text.autoelytra.selection"));
 
         selection.addEntry(entry.startBooleanToggle(text("text.autoelytra.plain"), config.usePlainRockets)

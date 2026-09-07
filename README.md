@@ -23,6 +23,9 @@
 | 优先使用副手中的烟花 | 开 | 副手有可用烟花时先于背包其它位置使用,用完仍放回副手 |
 | 保留烟花数量 | 1 | 背包中可用烟花总数不超过该值时一叠都不动(主手、副手这两个“主动使用位”不受限),避免把最后的备用烟花用光 |
 | 优先使用顺序 | 飞行时间长优先 | 还有其它可选:飞行时间短优先、堆叠数量多/少优先、按物品栏顺序(手持栏优先) |
+| 烟花不足提醒 | 开(阈值 4 发) | 背包烟花剩余数量 ≤ 阈值时,首次弹大标题,之后按设定间隔重复提醒 |
+| 鞘翅耐久提醒 | 开(阈值 20%) | 所穿鞘翅耐久 ≤ 阈值时,首次弹大标题,之后按设定间隔重复提醒 |
+| 提醒间隔 / 音效 | 100 刻 / 开 | 控制重复提醒频率;每次提醒可选附带提示音 |
 
 按键默认绑定为 **空格**,与跳跃键相同;在“控制”界面可以改成任意键。开启“同时响应原版跳跃键”后,两种方式都可以触发。
 
@@ -45,10 +48,10 @@
 
 ## 安装
 
-直接把构建出的 `build/libs/auto-elytra-firework-1.0.1.jar` 放入客户端 `mods/` 文件夹。若使用工作区里的 `upgrade_26_2/client_mods_26_2/`,可复制到该目录:
+直接把构建出的 `build/libs/auto-elytra-firework-1.0.2.jar` 放入客户端 `mods/` 文件夹。若使用工作区里的 `upgrade_26_2/client_mods_26_2/`,可复制到该目录:
 
 ```bash
-cp build/libs/auto-elytra-firework-1.0.1.jar ../../upgrade_26_2/client_mods_26_2/
+cp build/libs/auto-elytra-firework-1.0.2.jar ../../upgrade_26_2/client_mods_26_2/
 ```
 
 需要同时装有:
@@ -69,10 +72,12 @@ cp build/libs/auto-elytra-firework-1.0.1.jar ../../upgrade_26_2/client_mods_26_2
 
 产物:
 
-- `build/libs/auto-elytra-firework-1.0.1.jar` —— 模组本体(含模组图标)
-- `build/libs/auto-elytra-firework-1.0.1-sources.jar` —— 源码包
+- `build/libs/auto-elytra-firework-1.0.2.jar` —— 模组本体(含模组图标)
+- `build/libs/auto-elytra-firework-1.0.2-sources.jar` —— 源码包
 
 配置文件保存在游戏目录 `config/autoelytra.json`,可直接手改,也可以在模组菜单里修改。
+
+作者:梦歌
 
 ## 开源协议
 

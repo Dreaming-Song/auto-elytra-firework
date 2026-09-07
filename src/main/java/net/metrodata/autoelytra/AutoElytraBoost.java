@@ -29,6 +29,6 @@ public final class AutoElytraBoost implements ClientModInitializer {
         ));
 
         ClientTickEvents.END_CLIENT_TICK.register(ElytraBoostController::onEndTick);
-        LOGGER.info("[Auto Elytra Boost] Loaded for Minecraft 26.2.");
+        LOGGER.info("[Auto Elytra Firework] Loaded for Minecraft 26.2.");
     }
 }

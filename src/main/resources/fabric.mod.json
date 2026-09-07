@@ -6,7 +6,7 @@
   "description": "Auto Elytra Firework — 在鞘翅飞行时按空格(可改键)自动从背包取用烟花加速,使用后自动还原原手持物品;支持在模组菜单中设置保留数量、使用顺序与烟花类型。",
   "icon": "assets/autoelytra/icon.png",
   "authors": [
-    "metrodata"
+    "梦歌"
   ],
   "license": "MIT",
   "environment": "client",

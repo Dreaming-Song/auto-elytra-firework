@@ -17,6 +17,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.Fireworks;
 import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
 import net.minecraft.network.chat.Component;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.sounds.SoundEvents;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -34,10 +36,15 @@ public final class ElytraBoostController {
     private static final int OFFHAND_INDEX = 40;
     /** 手持栏第 0 格在 InventoryMenu 中的容器槽位。 */
     private static final int HOTBAR_MENU_OFFSET = 36;
+    /** 胸甲(鞘翅)在 Inventory 中的索引。 */
+    private static final int CHEST_INDEX = 38;
 
     private static int tick;
     private static int nextAllowedTick;
+    private static int nextWarningTick;
     private static boolean wasFallFlying;
+    private static boolean lastFireworkWarn;
+    private static boolean lastElytraWarn;
     /** 上一 tick 两个触发键是否处于按下状态,用于只认“松开后的新按下”。 */
     private static boolean boostKeyWasDown;
     private static boolean jumpKeyWasDown;
@@ -71,6 +78,8 @@ public final class ElytraBoostController {
         if (!ModConfig.INSTANCE.enabled) {
             return;
         }
+
+        checkWarnings(client, player);
 
         if (!player.isFallFlying() || player.isDeadOrDying() || player.isUsingItem()) {
             return;
@@ -117,7 +126,7 @@ public final class ElytraBoostController {
         int sourceSlot = findBestSource(inventory, selectedSlot, config);
         if (sourceSlot == -1) {
             AutoElytraBoost.LOGGER.debug(
-                    "[Auto Elytra Boost] No usable firework found (check 'keep this many rockets' and type filters).");
+                    "[Auto Elytra Firework] No usable firework found (check 'keep this many rockets' and type filters).");
             showMessage(client, "text.autoelytra.msg.noRocket");
             return false;
         }
@@ -183,7 +192,7 @@ public final class ElytraBoostController {
             ItemStack inHand = inventory.getItem(selectedSlot);
             if (!isAllowed(inHand, config)) {
                 AutoElytraBoost.LOGGER.warn(
-                        "[Auto Elytra Boost] Inventory swap did not take effect; skipping use to avoid wrong item use.");
+                        "[Auto Elytra Firework] Inventory swap did not take effect; skipping use to avoid wrong item use.");
                 showMessage(client, "text.autoelytra.msg.swapFail");
                 return false;
             }
@@ -206,6 +215,95 @@ public final class ElytraBoostController {
 
     private static void showMessage(Minecraft client, String translationKey) {
         client.gui.hud.setOverlayMessage(Component.translatable(translationKey), false);
+    }
+
+    /**
+     * 烟花数量或鞘翅耐久达到阈值时的强化提醒:
+     * 首次低于阈值弹一次屏幕标题,之后按设定间隔在底部重复提示并可选播放音效。
+     */
+    private static void checkWarnings(Minecraft client, LocalPlayer player) {
+        ConfigData config = ModConfig.INSTANCE;
+
+        boolean fireworkWarnNow = false;
+        int fireworkCount = 0;
+        if (config.warnLowFireworks) {
+            fireworkCount = countFireworkRockets(player.getInventory(), config);
+            fireworkWarnNow = fireworkCount <= config.fireworkWarnThreshold;
+        }
+
+        boolean elytraWarnNow = false;
+        int durabilityPercent = 100;
+        if (config.warnLowElytraDurability) {
+            durabilityPercent = getElytraDurabilityPercent(player.getInventory());
+            elytraWarnNow = durabilityPercent <= config.elytraWarnThresholdPercent;
+        }
+
+        if (!fireworkWarnNow && !elytraWarnNow) {
+            lastFireworkWarn = false;
+            lastElytraWarn = false;
+            return;
+        }
+
+        boolean newlyLow = (fireworkWarnNow && !lastFireworkWarn)
+                || (elytraWarnNow && !lastElytraWarn);
+        lastFireworkWarn = fireworkWarnNow;
+        lastElytraWarn = elytraWarnNow;
+
+        if (!newlyLow && tick < nextWarningTick) {
+            return;
+        }
+        nextWarningTick = tick + Math.max(20, config.warnCooldownTicks);
+
+        Component warning;
+        if (fireworkWarnNow) {
+            warning = Component.translatable("text.autoelytra.warn.firework", fireworkCount);
+        } else {
+            warning = Component.translatable("text.autoelytra.warn.elytra", durabilityPercent);
+        }
+
+        if (newlyLow) {
+            // 首次降到阈值以下时用居中大标题强提醒。
+            client.gui.hud.setTimes(0, 40, 15);
+            client.gui.hud.setTitle(warning);
+        }
+        client.gui.hud.setOverlayMessage(warning, false);
+
+        if (config.warnSoundEnabled) {
+            client.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.NOTE_BLOCK_COW_BELL, 1.0f));
+        }
+    }
+
+    /** 统计主背包与(可选的)副手中所有烟花火箭的总数量。 */
+    private static int countFireworkRockets(Inventory inventory, ConfigData config) {
+        int total = 0;
+        for (int i = 0; i < 36; i++) {
+            total += fireworkCountIn(inventory.getItem(i));
+        }
+        if (config.useOffhand) {
+            total += fireworkCountIn(inventory.getItem(OFFHAND_INDEX));
+        }
+        return total;
+    }
+
+    private static int fireworkCountIn(ItemStack stack) {
+        if (stack == null || stack.isEmpty() || stack.getItem() != Items.FIREWORK_ROCKET) {
+            return 0;
+        }
+        return stack.getCount();
+    }
+
+    /** 返回胸甲位鞘翅的耐久百分比;不是鞘翅时返回 100。 */
+    private static int getElytraDurabilityPercent(Inventory inventory) {
+        ItemStack chest = inventory.getItem(CHEST_INDEX);
+        if (chest == null || chest.isEmpty() || chest.getItem() != Items.ELYTRA) {
+            return 100;
+        }
+        int maxDamage = chest.getMaxDamage();
+        if (maxDamage <= 0) {
+            return 100;
+        }
+        int remaining = maxDamage - chest.getDamageValue();
+        return (int) Math.max(0, Math.min(100, (100L * remaining) / maxDamage));
     }
 
     /**

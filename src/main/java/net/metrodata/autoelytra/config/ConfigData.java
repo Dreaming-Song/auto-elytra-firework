@@ -45,4 +45,22 @@ public final class ConfigData {
 
     /** 候选烟花都满足条件时,优先使用哪一叠。 */
     public UsePriority priority = UsePriority.FLIGHT_LONG_FIRST;
+
+    /** 烟花数量达到阈值时进行强提醒。 */
+    public boolean warnLowFireworks = true;
+
+    /** 烟花剩余数量小于等于该值时提醒。 */
+    public int fireworkWarnThreshold = 4;
+
+    /** 鞘翅耐久度达到阈值时进行强提醒。 */
+    public boolean warnLowElytraDurability = true;
+
+    /** 鞘翅耐久百分比小于等于该值时提醒(0-100)。 */
+    public int elytraWarnThresholdPercent = 20;
+
+    /** 提醒的最小间隔(tick)。 */
+    public int warnCooldownTicks = 100;
+
+    /** 提醒时是否附带提示音。 */
+    public boolean warnSoundEnabled = true;
 }
